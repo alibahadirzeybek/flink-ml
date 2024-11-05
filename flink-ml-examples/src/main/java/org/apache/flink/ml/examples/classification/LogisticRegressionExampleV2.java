@@ -39,16 +39,16 @@ public class LogisticRegressionExampleV2 {
         // Generates input data.
         DataStream<Row> inputStream =
                 env.fromElements(
+                        Row.of(Vectors.dense(1.0), 0.0),
+                        Row.of(Vectors.dense(1.0), 0.0),
+                        Row.of(Vectors.dense(1.0), 0.0),
+                        Row.of(Vectors.dense(1.0), 0.0),
+                        Row.of(Vectors.dense(1.0), 0.0),
+                        Row.of(Vectors.dense(1.0), 1.0),
+                        Row.of(Vectors.dense(1.0), 1.0),
+                        Row.of(Vectors.dense(1.0), 1.0),
                         Row.of(Vectors.dense(1.0), 2.0),
-                        Row.of(Vectors.dense(1.0), 2.0),
-                        Row.of(Vectors.dense(1.0), 2.0),
-                        Row.of(Vectors.dense(1.0), 3.0),
-                        Row.of(Vectors.dense(1.0), 3.0),
-                        Row.of(Vectors.dense(1.0), 3.0),
-                        Row.of(Vectors.dense(1.0), 4.0),
-                        Row.of(Vectors.dense(1.0), 4.0),
-                        Row.of(Vectors.dense(1.0), 4.0),
-                        Row.of(Vectors.dense(1.0), 5.0));
+                        Row.of(Vectors.dense(1.0), 2.0));
         Table inputTable = tEnv.fromDataStream(inputStream).as("features", "label");
 
         // Creates a LogisticRegression object and initializes its parameters.
