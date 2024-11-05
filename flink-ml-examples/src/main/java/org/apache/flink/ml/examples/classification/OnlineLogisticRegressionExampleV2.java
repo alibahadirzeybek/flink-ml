@@ -49,34 +49,34 @@ public class OnlineLogisticRegressionExampleV2 {
 
         // Generates input training and prediction data. Both are infinite streams that periodically
         // sends out provided data to trigger model update and prediction.
-        List<Row> trainData3 =
+        List<Row> trainData0 =
                 Arrays.asList(
-                        Row.of(Vectors.dense(1.0), 3.0),
-                        Row.of(Vectors.dense(1.0), 3.0),
-                        Row.of(Vectors.dense(1.0), 3.0),
-                        Row.of(Vectors.dense(1.0), 3.0),
-                        Row.of(Vectors.dense(1.0), 3.0),
-                        Row.of(Vectors.dense(1.0), 3.0),
-                        Row.of(Vectors.dense(1.0), 3.0),
-                        Row.of(Vectors.dense(1.0), 3.0),
-                        Row.of(Vectors.dense(1.0), 3.0),
-                        Row.of(Vectors.dense(1.0), 3.0));
+                        Row.of(Vectors.dense(1.0), 1.0),
+                        Row.of(Vectors.dense(1.0), 1.0),
+                        Row.of(Vectors.dense(1.0), 1.0),
+                        Row.of(Vectors.dense(1.0), 1.0),
+                        Row.of(Vectors.dense(1.0), 1.0),
+                        Row.of(Vectors.dense(1.0), 1.0),
+                        Row.of(Vectors.dense(1.0), 1.0),
+                        Row.of(Vectors.dense(1.0), 1.0),
+                        Row.of(Vectors.dense(1.0), 1.0),
+                        Row.of(Vectors.dense(1.0), 1.0));
 
-        List<Row> trainData4 =
+        List<Row> trainData1 =
                 Arrays.asList(
-                        Row.of(Vectors.dense(1.0), 4.0),
-                        Row.of(Vectors.dense(1.0), 4.0),
-                        Row.of(Vectors.dense(1.0), 4.0),
-                        Row.of(Vectors.dense(1.0), 4.0),
-                        Row.of(Vectors.dense(1.0), 4.0),
-                        Row.of(Vectors.dense(1.0), 4.0),
-                        Row.of(Vectors.dense(1.0), 4.0),
-                        Row.of(Vectors.dense(1.0), 4.0),
-                        Row.of(Vectors.dense(1.0), 4.0),
-                        Row.of(Vectors.dense(1.0), 4.0));
+                        Row.of(Vectors.dense(1.0), 0.0),
+                        Row.of(Vectors.dense(1.0), 0.0),
+                        Row.of(Vectors.dense(1.0), 0.0),
+                        Row.of(Vectors.dense(1.0), 0.0),
+                        Row.of(Vectors.dense(1.0), 0.0),
+                        Row.of(Vectors.dense(1.0), 0.0),
+                        Row.of(Vectors.dense(1.0), 0.0),
+                        Row.of(Vectors.dense(1.0), 0.0),
+                        Row.of(Vectors.dense(1.0), 0.0),
+                        Row.of(Vectors.dense(1.0), 0.0));
 
         List<Row> predictData =
-                Collections.singletonList(Row.of(Vectors.dense(1.0), 3.0));
+                Collections.singletonList(Row.of(Vectors.dense(1.0), 0.0));
 
         RowTypeInfo typeInfo =
                 new RowTypeInfo(
@@ -84,7 +84,7 @@ public class OnlineLogisticRegressionExampleV2 {
                         new String[] {"features", "label"});
 
         SourceFunction<Row> trainSource =
-                new BoundedPeriodicSourceFunction(1_000L, Arrays.asList(trainData3, trainData4, trainData4, trainData4, trainData4, trainData4, trainData4, trainData4, trainData4, trainData4));
+                new BoundedPeriodicSourceFunction(1_000L, Arrays.asList(trainData0, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1, trainData1));
         DataStream<Row> trainStream = env.addSource(trainSource, typeInfo);
         Table trainTable = tEnv.fromDataStream(trainStream).as("features");
 
@@ -95,7 +95,7 @@ public class OnlineLogisticRegressionExampleV2 {
 
         // Creates an online LogisticRegression object and initializes its parameters and initial
         // model data.
-        Row initModelData = Row.of(Vectors.dense(1.0), 3L);
+        Row initModelData = Row.of(Vectors.dense(1.0), 0L);
         Table initModelDataTable = tEnv.fromDataStream(env.fromElements(initModelData));
         OnlineLogisticRegression olr =
                 new OnlineLogisticRegression()
