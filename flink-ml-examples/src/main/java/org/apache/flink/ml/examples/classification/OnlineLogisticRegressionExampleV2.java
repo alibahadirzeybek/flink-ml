@@ -21,6 +21,7 @@ package org.apache.flink.ml.examples.classification;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.api.java.typeutils.RowTypeInfo;
+import org.apache.flink.ml.classification.logisticregression.LogisticRegression;
 import org.apache.flink.ml.classification.logisticregression.OnlineLogisticRegression;
 import org.apache.flink.ml.classification.logisticregression.OnlineLogisticRegressionModel;
 import org.apache.flink.ml.examples.util.BoundedPeriodicSourceFunction;
@@ -84,7 +85,45 @@ public class OnlineLogisticRegressionExampleV2 {
                         new String[] {"features", "label"});
 
         SourceFunction<Row> trainSource =
-                new BoundedPeriodicSourceFunction(1_000L, Arrays.asList(trainDataInitial, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental, trainDataIncremental));
+                new BoundedPeriodicSourceFunction(
+                        1_000L,
+                        Arrays.asList(
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental,
+                                trainDataIncremental
+                        )
+                );
         DataStream<Row> trainStream = env.addSource(trainSource, typeInfo);
         Table trainTable = tEnv.fromDataStream(trainStream).as("features");
 
@@ -95,8 +134,19 @@ public class OnlineLogisticRegressionExampleV2 {
 
         // Creates an online LogisticRegression object and initializes its parameters and initial
         // model data.
-        Row initModelData = Row.of(Vectors.dense(1.0), 0L);
-        Table initModelDataTable = tEnv.fromDataStream(env.fromElements(initModelData));
+        Table initModelDataTable =
+                new LogisticRegression()
+                        .setFeaturesCol("features")
+                        .setLabelCol("label")
+                        .setPredictionCol("prediction")
+                        .setReg(0.2)
+                        .setElasticNet(0.5)
+                        .setGlobalBatchSize(10)
+                        .fit(tEnv.fromDataStream(
+                                        env.fromCollection(trainDataInitial, typeInfo)
+                                )
+                        )
+                        .getModelData()[0];
         OnlineLogisticRegression olr =
                 new OnlineLogisticRegression()
                         .setFeaturesCol("features")
