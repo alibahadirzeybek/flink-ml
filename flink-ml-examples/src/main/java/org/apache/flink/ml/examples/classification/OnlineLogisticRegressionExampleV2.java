@@ -76,8 +76,7 @@ public class OnlineLogisticRegressionExampleV2 {
                         Row.of(Vectors.dense(1.0), 1.0),
                         Row.of(Vectors.dense(1.0), 1.0));
 
-        List<Row> predictData =
-                Collections.singletonList(Row.of(Vectors.dense(1.0), 1.0));
+        List<Row> predictData = Collections.singletonList(Row.of(Vectors.dense(1.0), 1.0));
 
         RowTypeInfo typeInfo =
                 new RowTypeInfo(
@@ -121,9 +120,7 @@ public class OnlineLogisticRegressionExampleV2 {
                                 trainDataIncremental,
                                 trainDataIncremental,
                                 trainDataIncremental,
-                                trainDataIncremental
-                        )
-                );
+                                trainDataIncremental));
         DataStream<Row> trainStream = env.addSource(trainSource, typeInfo);
         Table trainTable = tEnv.fromDataStream(trainStream).as("features");
 
@@ -142,10 +139,7 @@ public class OnlineLogisticRegressionExampleV2 {
                         .setReg(0.2)
                         .setElasticNet(0.5)
                         .setGlobalBatchSize(10)
-                        .fit(tEnv.fromDataStream(
-                                        env.fromCollection(trainDataInitial, typeInfo)
-                                )
-                        )
+                        .fit(tEnv.fromDataStream(env.fromCollection(trainDataInitial, typeInfo)))
                         .getModelData()[0];
         OnlineLogisticRegression olr =
                 new OnlineLogisticRegression()
